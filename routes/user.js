@@ -4,11 +4,25 @@ const userController = require("../controllers/user");
 const router = express.Router();
 const {verify, verifyAdmin, isLoggedIn} = require("../auth");
 
-// router.get("/details", verify, userController.getProfile);
 
-// router.post("/checkEmail", userController.checkEmailExists);
+//register uesr 
 router.post("/register", userController.registerUser);
+
+//login User
 router.post("/login", userController.loginUser);
+
+// set as admin
+router.patch('/:userId/set-as-admin', verify, verifyAdmin, userController.setAdmin)
+
+// Retrieve user details
+router.get('/details', verify, userController.retrieveUser)
+
+// Update password
+router.patch('/update-password', verify, userController.updatePassword)
+
+
+
+
 
 // Blank ko muna yung sa mga google
 /*router.get('/google', 
@@ -50,13 +64,6 @@ router.get("/logout", (req, res) => {
 	})
 })*/
 
-// set as admin
-router.patch('/:userId/set-as-admin', verify, verifyAdmin, userController.setAdmin)
 
-// Retrieve user details
-router.get('/details', verify, userController.retrieveUser)
-
-// Update password
-router.patch('/update-password', verify, userController.updatePassword)
 
 module.exports = router;

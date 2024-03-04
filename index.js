@@ -7,7 +7,7 @@ const passport = require("passport")
 const session = require('express-session');
 
 // const cartRoutes = require("./routes/cart");
-// const productRoute = require("./routes/product");
+const productRoute = require("./routes/product");
 // const orderRoutes = require("./routes/order");
 const userRoute = require("./routes/user");
 
@@ -20,16 +20,16 @@ app.use(express.urlencoded({extended:true}));
 app.use(cors());
 
 //google logIn
-app.use(session({
-	secret: process.env.clientSecret,
-	resave: false,
-	saveUninitialized: false
-}));
+// app.use(session({
+// 	secret: process.env.clientSecret,
+// 	resave: false,
+// 	saveUninitialized: false
+// }));
 
 app.use(passport.initialize());
-app.use(passport.session())
+// app.use(passport.session())
 // Mongoose Connection
-mongoose.connect("mongodb+srv://daveoyangorin:admin1234@batch364.njbbrbz.mongodb.net/");
+mongoose.connect("mongodb+srv://daveoyangorin:admin1234@batch364.njbbrbz.mongodb.net/EcommerceAPI?retryWrites=true&w=majority");
 
 let db = mongoose.connection;
 
@@ -41,7 +41,7 @@ db.once("open", () => console.log("We're connected to the cloud database!"))
 
 //post route
 // app.use("/order" , orderRoutes);
-// app.use("/product" , productRoute);
+app.use("/product" , productRoute);
 // app.use("/cart" , cartRoutes);
 app.use("/user" , userRoute);
 // Server listening

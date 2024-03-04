@@ -3,35 +3,41 @@ const bcrypt = require('bcrypt');
 const auth = require("../auth");
 const {verify, verifyAdmin} = require("../auth");
 
-module.exports.registerUser = (req,res) => {
-	if (!req.body.email.includes("@")){
-		return res.status(400).send({ error: "Email invalid" });
-	}
-
-	else if (req.body.mobileNo.length !== 11){
-		return res.status(400).send({ error: "Mobile number invalid" });
-	}
-
-	else if (req.body.password.length < 8) {
-		return res.status(400).send({ error: "Password must be atleast 8 characters" });
-	}
-
-	else {
-		let newUser = new User({
-			firstName : req.body.firstName,
-			lastName : req.body.lastName,
-			email : req.body.email,
-			mobileNo : req.body.mobileNo,
-			password : bcrypt.hashSync(req.body.password, 10)
-		})
-
-		newUser.save()
-		.then((user) => res.status(201).send({ message: "Registered Successfully" }))
-		.catch(err => {
-			console.error("Error in saving: ", err)
-			return res.status(500).send({ error: "Error in save"})
-		})
-	}
+module.exports.registerUser = (req, res) => {
+    if (!req.body.email.includes("@")) {
+        return res.status(400).send({ error: "Email invalid" });
+    }
+    else if (req.body.mobileNo.length !== 11) {
+        return res.status(400).send({ error: "Mobile number invalid" });
+    }
+    else if (req.body.password.length < 8) {
+        return res.status(400).send({ error: "Password must be at least 8 characters" });
+    } else {
+        User.findOne({ email: req.body.email })
+            .then(existingUser => {
+                if (existingUser) {
+                    return res.status(400).send({ error: "Email already exists" });
+                } else {
+                    let newUser = new User({
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        email: req.body.email,
+                        mobileNo: req.body.mobileNo,
+                        password: bcrypt.hashSync(req.body.password, 10)
+                    });
+                    newUser.save()
+                        .then((user) => res.status(201).send({ user, message: "Registered Successfully" }))
+                        .catch(err => {
+                            console.error("Error in saving: ", err);
+                            return res.status(500).send({ error: "Error in save" });
+                        });
+                }
+            })
+            .catch(err => {
+                console.error("Error in finding user: ", err);
+                return res.status(500).send({ error: "Error in finding user" });
+            });
+    }
 };
 
 module.exports.loginUser = (req, res) => {
@@ -43,7 +49,7 @@ module.exports.loginUser = (req, res) => {
 			} else {
 				const isPasswordCorrect = bcrypt.compareSync(req.body.password, result.password);
 				if (isPasswordCorrect) {					
-					return res.status(200).send({ access : auth.createAccessToken(result)})
+					return res.status(200).send({result, access : auth.createAccessToken(result)})
 				} else {
 					return res.status(401).send({ message: "Email and password do not match" });
 				}
