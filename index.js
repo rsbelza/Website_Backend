@@ -1,5 +1,5 @@
 // Setup the dependencies
-require("dotenv").config()
+// require("dotenv").config()
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -11,7 +11,7 @@ const session = require('express-session');
 // const orderRoutes = require("./routes/order");
 const userRoute = require("./routes/user");
 
-require("./passport");
+// require("./passport");
 // Server setup
 const app = express();
 const port = 4000;

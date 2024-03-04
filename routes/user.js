@@ -2,7 +2,7 @@ const express = require("express");
 const passport = require('passport');
 const userController = require("../controllers/user");
 const router = express.Router();
-const {verify, isLoggedIn} = require("../auth");
+const {verify, verifyAdmin, isLoggedIn} = require("../auth");
 
 // router.get("/details", verify, userController.getProfile);
 
@@ -10,8 +10,8 @@ const {verify, isLoggedIn} = require("../auth");
 router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser);
 
-
-router.get('/google', 
+// Blank ko muna yung sa mga google
+/*router.get('/google', 
 	passport.authenticate('google', {
 		scope:['email', 'profile'],
 	}
@@ -48,5 +48,15 @@ router.get("/logout", (req, res) => {
 			})
 		}
 	})
-})
+})*/
+
+// set as admin
+router.patch('/:userId/set-as-admin', verify, verifyAdmin, userController.setAdmin)
+
+// Retrieve user details
+router.get('/details', verify, userController.retrieveUser)
+
+// Update password
+router.patch('/update-password', verify, userController.updatePassword)
+
 module.exports = router;

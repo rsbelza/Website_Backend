@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require('bcrypt');
 const auth = require("../auth");
+const {verify, verifyAdmin} = require("../auth");
 
 module.exports.registerUser = (req,res) => {
 	if (!req.body.email.includes("@")){
@@ -56,4 +57,60 @@ module.exports.loginUser = (req, res) => {
 		else {
 			return res.status(400).send({error: "Invalid Email"})
 		}
+};
+
+// Set as Admin
+module.exports.setAdmin = (req, res) => {
+    let updateActiveField = {
+        isAdmin: true
+    }
+    if (req.user.isAdmin == true){
+      return User.findByIdAndUpdate(req.params.userId, updateActiveField)
+      .then(setAdmin => {
+          if (!setAdmin) {
+              return res.status(404).send({ error: "Failed to set user as admin"});
+          } 
+             return res.status(200).send({ message: "User is now an admin"});
+      })
+    }
+    else {
+      return res.status(403).send(false);
+      }
+};
+
+// Retrieve User Details
+module.exports.retrieveUser = (req, res) => {
+    const userId = req.user.id;
+    User.findById(userId)
+    .then(user => {
+        if (!user) {
+            return res.status(404).send({ error: 'User not found' });
+        }
+        user.password = undefined;
+        return res.status(200).send({ user });
+    })
+    .catch(err => {
+    	console.error("Error in fetching user profile", err)
+    	return res.status(500).send({ error: 'Failed to fetch user profile' })
+    });
+};
+
+// Update Password
+module.exports.updatePassword = async (req, res) => {
+	try {
+    const { newPassword } = req.body;
+    const { id } = req.user; // Extracting user ID from the authorization header
+
+    // Hashing the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Updating the user's password in the database
+    await User.findByIdAndUpdate(id, { password: hashedPassword });
+
+    // Sending a success response
+    res.status(200).json({ message: 'Password reset successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
 };
