@@ -130,3 +130,52 @@ module.exports.activateProduct = (req, res) => {
     });
 
 };
+
+// Search Product By Name
+module.exports.searchProductByName = async (req, res) => {
+    try {
+        const { name } = req.body;
+
+        const pipeline = [
+            {
+                $match: {
+                    name: { $regex: name, $options: 'i' } // Case-insensitive search for product name
+                }
+            }
+        ];
+
+        // Execute the aggregation pipeline
+        const products = await Product.aggregate(pipeline);
+
+        // Return the filtered products as a response
+        res.status(200).json({ products });
+    } catch (error) {
+        // Handle errors
+        console.error('Error searching for products:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// Search Product By Price
+module.exports.searchProductByPrice = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.body;
+    const pipeline = [
+      {
+        $match: {
+          price: { $gte: minPrice, $lte: maxPrice } // Filter products within the given price range
+        }
+      }
+    ];
+
+    // Execute the aggregation pipeline
+    const products = await Product .aggregate(pipeline);
+
+    // Return the filtered products as a response
+    res.status(200).json({ products });
+  } catch (error) {
+    // Handle errors
+    console.error('Error searching for products:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

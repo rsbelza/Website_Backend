@@ -6,7 +6,7 @@ const cors = require("cors");
 const passport = require("passport")
 const session = require('express-session');
 
-// const cartRoutes = require("./routes/cart");
+const cartRoutes = require("./routes/cart");
 const productRoute = require("./routes/product");
 // const orderRoutes = require("./routes/order");
 const userRoute = require("./routes/user");
@@ -42,7 +42,7 @@ db.once("open", () => console.log("We're connected to the cloud database!"))
 //post route
 // app.use("/order" , orderRoutes);
 app.use("/product" , productRoute);
-// app.use("/cart" , cartRoutes);
+app.use("/cart" , cartRoutes);
 app.use("/user" , userRoute);
 // Server listening
 if(require.main === module){

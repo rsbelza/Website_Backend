@@ -24,4 +24,10 @@ router.patch('/:productId/archive', verify, productController.archiveProduct)
 // Activate Product
 router.patch('/:productId/activate', verify, productController.activateProduct)
 
+// Search Product by Name
+router.post('/searchByName', productController.searchProductByName)
+
+// Search Product by Price
+router.post('/searchByPrice', productController.searchProductByPrice)
+
 module.exports = router;
