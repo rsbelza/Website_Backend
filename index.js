@@ -8,7 +8,7 @@ const session = require('express-session');
 
 const cartRoutes = require("./routes/cart");
 const productRoute = require("./routes/product");
-// const orderRoutes = require("./routes/order");
+const orderRoutes = require("./routes/order");
 const userRoute = require("./routes/user");
 
 // require("./passport");
@@ -29,7 +29,7 @@ app.use(cors());
 app.use(passport.initialize());
 // app.use(passport.session())
 // Mongoose Connection
-mongoose.connect("mongodb+srv://daveoyangorin:admin1234@batch364.njbbrbz.mongodb.net/EcommerceAPI?retryWrites=true&w=majority");
+mongoose.connect("mongodb+srv://rsbelza:admin1234@cluster0.9orcdgp.mongodb.net/capstone2?retryWrites=true&w=majority");
 
 let db = mongoose.connection;
 
@@ -40,7 +40,7 @@ db.on("error", console.error.bind(console, "Connection Error!"));
 db.once("open", () => console.log("We're connected to the cloud database!"))
 
 //post route
-// app.use("/order" , orderRoutes);
+app.use("/order" , orderRoutes);
 app.use("/product" , productRoute);
 app.use("/cart" , cartRoutes);
 app.use("/user" , userRoute);

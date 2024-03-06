@@ -41,28 +41,28 @@ module.exports.registerUser = (req, res) => {
 };
 
 module.exports.loginUser = (req, res) => {
-    if(req.body.email.includes("@")){
-        User.findOne({ email : req.body.email })
-        .then(result => {
-            if(result == null){
-                return res.status(404).send({ error: "No Email Found" });
-            } else {
-                const isPasswordCorrect = bcrypt.compareSync(req.body.password, result.password);
-                if (isPasswordCorrect) {                    
-                    return res.status(200).send({result, access : auth.createAccessToken(result)})
-                } else {
-                    return res.status(401).send({ message: "Email and password do not match" });
-                }
-            }
-        })
-        .catch(err => {
-            console.error("Error in find: ", err)
-            return res.status(500).send({ error: "Error in find"})
-        })
-        }
-        else {
-            return res.status(400).send({error: "Invalid Email"})
-        }
+	if(req.body.email.includes("@")){
+		User.findOne({ email : req.body.email })
+		.then(result => {
+			if(result == null){
+				return res.status(404).send({ error: "No Email Found" });
+			} else {
+				const isPasswordCorrect = bcrypt.compareSync(req.body.password, result.password);
+				if (isPasswordCorrect) {					
+					return res.status(200).send({result, access : auth.createAccessToken(result)})
+				} else {
+					return res.status(401).send({ message: "Email and password do not match" });
+				}
+			}
+		})
+		.catch(err => {
+			console.error("Error in find: ", err)
+			return res.status(500).send({ error: "Error in find"})
+		})
+		}
+		else {
+			return res.status(400).send({error: "Invalid Email"})
+		}
 };
 
 // Set as Admin
@@ -96,14 +96,14 @@ module.exports.retrieveUser = (req, res) => {
         return res.status(200).send({ user });
     })
     .catch(err => {
-        console.error("Error in fetching user profile", err)
-        return res.status(500).send({ error: 'Failed to fetch user profile' })
+    	console.error("Error in fetching user profile", err)
+    	return res.status(500).send({ error: 'Failed to fetch user profile' })
     });
 };
 
 // Update Password
 module.exports.updatePassword = async (req, res) => {
-    try {
+	try {
     const { newPassword } = req.body;
     const { id } = req.user; // Extracting user ID from the authorization header
 
