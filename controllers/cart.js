@@ -22,7 +22,7 @@ module.exports.getCart = (req, res) => {
 // Add to Cart
 module.exports.addToCart = async (req, res) => {
     const userId = req.user.id; // Assuming the user's ID is stored in req.user.id
-    const { productId } = req.body;
+    const { productId, quantity } = req.body; // Extract productId and quantity from request body
 
     try {
         let cart = await Cart.findOne({ userId });
@@ -41,22 +41,19 @@ module.exports.addToCart = async (req, res) => {
         // Extract product price from product details
         const productPrice = product.price;
 
-        // You can set a default quantity or fetch it from somewhere else if needed
-        const defaultQuantity = 1; // Default quantity
-
-        // Calculate subtotal based on product price and default quantity
-        const subtotal = productPrice * defaultQuantity;
+        // Calculate subtotal based on product price and quantity
+        const subtotal = productPrice * quantity;
 
         // Add or update item in the cart
         const existingItemIndex = cart.cartItems.findIndex(item => item.productId === productId);
 
         if (existingItemIndex !== -1) {
             // If item already exists in cart, update its quantity and subtotal
-            cart.cartItems[existingItemIndex].quantity += defaultQuantity;
-            cart.cartItems[existingItemIndex].subtotal += subtotal;
+            cart.cartItems[existingItemIndex].quantity += quantity; // Update quantity
+            cart.cartItems[existingItemIndex].subtotal += subtotal; // Update subtotal
         } else {
             // If item doesn't exist in cart, add it
-            cart.cartItems.push({ productId, quantity: defaultQuantity, subtotal });
+            cart.cartItems.push({ productId, quantity, subtotal });
         }
 
         // Update total price
@@ -70,7 +67,6 @@ module.exports.addToCart = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 // Update Product Quantity
 module.exports.updateProductQuantity = async (req, res) => {
     const userId = req.user.id; // Assuming the user's ID is stored in req.user.id

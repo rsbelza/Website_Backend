@@ -43,7 +43,7 @@ db.once("open", () => console.log("We're connected to the cloud database!"))
 app.use("/order" , orderRoutes);
 app.use("/product" , productRoute);
 app.use("/cart" , cartRoutes);
-app.use("/user" , userRoute);
+app.use("/users" , userRoute);
 // Server listening
 if(require.main === module){
 	app.listen(port, () => console.log(`Server running at port ${port}`));

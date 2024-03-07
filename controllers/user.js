@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const auth = require("../auth");
 const {verify, verifyAdmin} = require("../auth");
 
+
 module.exports.registerUser = (req, res) => {
     if (!req.body.email.includes("@")) {
         return res.status(400).send({ error: "Email invalid" });
