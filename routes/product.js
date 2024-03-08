@@ -10,7 +10,7 @@ router.post('/', verify, verifyAdmin, productController.addProduct)
 router.get('/all', verify, verifyAdmin, productController.getAllProducts)
 
 // Retrieve All Active Products
-router.get('/', verify, verifyAdmin, productController.getAllActiveProducts)
+router.get('/', productController.getAllActiveProducts)
 
 // Retrieve Single Product
 router.get('/:productId', verify, productController.getSingleProduct)
