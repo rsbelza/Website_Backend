@@ -13,7 +13,7 @@ router.get('/all', verify, verifyAdmin, productController.getAllProducts)
 router.get('/', productController.getAllActiveProducts)
 
 // Retrieve Single Product
-router.get('/:productId', verify, productController.getSingleProduct)
+router.get('/:productId', productController.getSingleProduct)
 
 // Update Product Info
 router.patch('/:productId/update', verify, productController.updateProduct)
