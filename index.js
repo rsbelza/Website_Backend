@@ -14,7 +14,7 @@ const userRoute = require("./routes/user");
 // require("./passport");
 // Server setup
 const app = express();
-const port = 4000;
+const port = 4007;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
@@ -40,10 +40,10 @@ db.on("error", console.error.bind(console, "Connection Error!"));
 db.once("open", () => console.log("We're connected to the cloud database!"))
 
 //post route
-app.use("/order" , orderRoutes);
-app.use("/product" , productRoute);
-app.use("/cart" , cartRoutes);
-app.use("/users" , userRoute);
+app.use("/b7/orders" , orderRoutes);
+app.use("/b7/products" , productRoute);
+app.use("/b7/cart" , cartRoutes);
+app.use("/b7/users" , userRoute);
 // Server listening
 if(require.main === module){
 	app.listen(port, () => console.log(`Server running at port ${port}`));
