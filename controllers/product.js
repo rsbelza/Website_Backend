@@ -21,9 +21,9 @@ module.exports.addProduct = (req, res) => {
 // Get All Products
 module.exports.getAllProducts = (req, res) => {
    return Product.find({})
-  .then(courses => {
+  .then(Products => {
     // Updated to use proper conditional checks (result.length > 0) to handle cases where there are no courses.
-    if(courses.length > 0) {
+    if(Products.length > 0) {
       // Provided a more structured response format using an object with a key allCourses containing the courses.
       return res.status(200).send({ Products })
     } else {
@@ -32,7 +32,7 @@ module.exports.getAllProducts = (req, res) => {
   })
   .catch(err => {
     console.error("Error in finding all courses: ", err)
-    return res.status(500).send({ error: 'Error finding Products.' })
+    return res.status(500).send({ message: ' No Products found. '})
   });
 };
 
