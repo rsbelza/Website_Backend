@@ -25,14 +25,14 @@ module.exports.getAllProducts = (req, res) => {
     // Updated to use proper conditional checks (result.length > 0) to handle cases where there are no courses.
     if(courses.length > 0) {
       // Provided a more structured response format using an object with a key allCourses containing the courses.
-      return res.status(200).send({ courses })
+      return res.status(200).send({ Products })
     } else {
-      return res.status(200).send({ message: ' No courses found. '})
+      return res.status(200).send({ message: ' No Products found. '})
     }
   })
   .catch(err => {
     console.error("Error in finding all courses: ", err)
-    return res.status(500).send({ error: 'Error finding courses.' })
+    return res.status(500).send({ error: 'Error finding Products.' })
   });
 };
 
