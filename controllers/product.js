@@ -21,13 +21,13 @@ module.exports.addProduct = (req, res) => {
 // Get All Products
 module.exports.getAllProducts = (req, res) => {
    return Product.find({})
-  .then(courses => {
+  .then(Products => {
     // Updated to use proper conditional checks (result.length > 0) to handle cases where there are no courses.
-    if(courses.length > 0) {
+    if(Products.length > 0) {
       // Provided a more structured response format using an object with a key allCourses containing the courses.
-      return res.status(200).send({ courses })
+      return res.status(200).send({ Products })
     } else {
-      return res.status(200).send({ message: ' No courses found. '})
+      return res.status(200).send({ message: ' No Products found. '})
     }
   })
   .catch(err => {
@@ -85,6 +85,7 @@ module.exports.updateProduct = async (req, res) => {
       updatedProduct: updatedProduct 
     });
 
+    res.json(updatedProduct);
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: 'Failed to update Product' });
