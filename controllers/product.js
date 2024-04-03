@@ -21,18 +21,18 @@ module.exports.addProduct = (req, res) => {
 // Get All Products
 module.exports.getAllProducts = (req, res) => {
    return Product.find({})
-  .then(Products => {
+  .then(courses => {
     // Updated to use proper conditional checks (result.length > 0) to handle cases where there are no courses.
-    if(Products.length > 0) {
+    if(courses.length > 0) {
       // Provided a more structured response format using an object with a key allCourses containing the courses.
-      return res.status(200).send({ Products })
+      return res.status(200).send({ courses })
     } else {
-      return res.status(200).send({ message: ' No Products found. '})
+      return res.status(200).send({ message: ' No courses found. '})
     }
   })
   .catch(err => {
     console.error("Error in finding all courses: ", err)
-    return res.status(500).send({ message: ' No Products found. '})
+    return res.status(500).send({ error: 'Error finding courses.' })
   });
 };
 
@@ -80,8 +80,11 @@ module.exports.updateProduct = async (req, res) => {
     // Update the user's profile in the database
     const updatedProduct = await Product.findByIdAndUpdate(productId,{ name, description, price },{ new: true }
     );
+    return res.status(200).send({ 
+      message: 'Product updated successfully', 
+      updatedProduct: updatedProduct 
+    });
 
-    res.json(updatedProduct);
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: 'Failed to update Product' });
