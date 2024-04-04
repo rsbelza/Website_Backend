@@ -69,7 +69,6 @@ module.exports.addToCart = async (req, res) => {
     }
 };
 
-
 // Update Product Quantity
 module.exports.updateProductQuantity = async (req, res) => {
     const userId = req.user.id; // Assuming the user's ID is stored in req.user.id
