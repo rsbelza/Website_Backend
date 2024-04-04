@@ -38,8 +38,9 @@ module.exports.addToCart = async (req, res) => {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        // Extract product price from product details
+        // Extract product price and name from product details
         const productPrice = product.price;
+        const productName = product.name;
 
         // Calculate subtotal based on product price and quantity
         const subtotal = productPrice * quantity;
@@ -53,7 +54,7 @@ module.exports.addToCart = async (req, res) => {
             cart.cartItems[existingItemIndex].subtotal += subtotal; // Update subtotal
         } else {
             // If item doesn't exist in cart, add it
-            cart.cartItems.push({ productId, quantity, subtotal });
+            cart.cartItems.push({ productId, productName, quantity, subtotal }); // Save product name along with ID
         }
 
         // Update total price
@@ -67,6 +68,8 @@ module.exports.addToCart = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
 // Update Product Quantity
 module.exports.updateProductQuantity = async (req, res) => {
     const userId = req.user.id; // Assuming the user's ID is stored in req.user.id
