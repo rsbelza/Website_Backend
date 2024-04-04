@@ -68,7 +68,6 @@ module.exports.addToCart = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 // Update Product Quantity
 module.exports.updateProductQuantity = async (req, res) => {
     const userId = req.user.id; // Assuming the user's ID is stored in req.user.id
