@@ -28,7 +28,7 @@ module.exports.addToCart = async (req, res) => {
         let cart = await Cart.findOne({ userId });
 
         if (!cart) {
-            cart = new Cart({ userId, productName, cartItems: [], totalPrice: 0 }); // Initialize totalPrice
+            cart = new Cart({ userId, cartItems: [], totalPrice: 0 }); // Initialize totalPrice
         }
 
         // Fetch product details based on productId
