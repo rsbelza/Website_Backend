@@ -53,7 +53,7 @@ module.exports.addToCart = async (req, res) => {
             cart.cartItems[existingItemIndex].quantity += quantity; // Update quantity
             cart.cartItems[existingItemIndex].subtotal += subtotal; // Update subtotal
         } else {
-            // If item doesn't exist in cart, add it
+            // If item doesn't exist in cart, add it with the productName
             cart.cartItems.push({ productId, productName, quantity, subtotal }); // Save product name along with ID
         }
 
@@ -68,6 +68,7 @@ module.exports.addToCart = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 // Update Product Quantity
 module.exports.updateProductQuantity = async (req, res) => {
     const userId = req.user.id; // Assuming the user's ID is stored in req.user.id
