@@ -6,6 +6,7 @@ module.exports.addProduct = (req, res) => {
   const newProduct = new Product({
     name : req.body.name,
     description : req.body.description,
+    category : req.body.category,
     price : req.body.price
   });
 
