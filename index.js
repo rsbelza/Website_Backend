@@ -19,7 +19,8 @@ const port = 4007;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
-
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({ limit: '50mb' }));
 //google logIn
 // app.use(session({
 // 	secret: process.env.clientSecret,
