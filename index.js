@@ -6,6 +6,7 @@ const cors = require("cors");
 const passport = require("passport")
 const multer = require('multer');
 const session = require('express-session');
+const bodyParser = require('body-parser');
 
 const cartRoutes = require("./routes/cart");
 const productRoute = require("./routes/product");
@@ -19,7 +20,6 @@ const port = 4007;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
-const bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '50mb' }));
 //google logIn
 // app.use(session({
