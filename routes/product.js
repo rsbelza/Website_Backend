@@ -1,6 +1,7 @@
 const express = require("express");
 const productController = require("../controllers/product");
 const router = express.Router();
+const upload = multer("../Images");
 const {verify, verifyAdmin} = require("../auth");
 
 // Add Product
@@ -16,7 +17,7 @@ router.get('/', productController.getAllActiveProducts)
 router.get('/:productId', productController.getSingleProduct)
 
 // Update Product Info
-router.patch('/:productId/update', verify, productController.updateProduct)
+router.patch('/:productId/update', verify, upload.single('image'), productController.updateProduct)
 
 // Archive Product
 router.patch('/:productId/archive', verify, productController.archiveProduct)
