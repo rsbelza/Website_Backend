@@ -4,7 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("passport")
-const multer = require('multer');
+// const multer = require('multer');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 

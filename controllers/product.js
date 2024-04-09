@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const auth = require("../auth");
 
+
 module.exports.addProduct = (req, res) => {
   const newProduct = new Product({
     name : req.body.name,
