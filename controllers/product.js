@@ -69,7 +69,10 @@ module.exports.updateProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
     const { name, description, price } = req.body;
-    const image = req.file.buffer;
+    let image;
+    if (req.file && req.file.buffer) {
+      image = req.file.buffer;
+    }
 
     const updatedProduct = await Product.findByIdAndUpdate(productId, { name, description, price, image }, { new: true });
 
