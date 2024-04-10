@@ -2,13 +2,12 @@ const express = require("express");
 const productController = require("../controllers/product");
 const router = express.Router();
 const multer = require('multer');
-const upload = multer({ dest: "../Images" });
 const {verify, verifyAdmin} = require("../auth");
-
+const imageUpload = multer({ dest: 'uploads/' })
 
 
 // Add Product
-router.post('/', verify, verifyAdmin, productController.addProduct)
+router.post('/', verify, verifyAdmin,  imageUpload.single('uploadImage'), productController.addProduct)
 
 // Retrieve All Products
 router.get('/all', verify, verifyAdmin, productController.getAllProducts)
@@ -20,7 +19,7 @@ router.get('/', productController.getAllActiveProducts)
 router.get('/:productId', productController.getSingleProduct)
 
 // Update Product Info
-router.patch('/:productId/update', verify, upload.single('image'), productController.updateProduct)
+router.post('/:productId/update', verify, imageUpload.single('uploadImage'), productController.updateProduct );
 
 // Archive Product
 router.patch('/:productId/archive', verify, productController.archiveProduct)

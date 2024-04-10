@@ -1,19 +1,31 @@
 const Product = require("../models/Product");
 const auth = require("../auth");
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {  
+    cb(null, 'uploads/');
+  },
+  filename: function(req, file, cb) {    
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
 
 
 module.exports.addProduct = (req, res) => {
+  const uploadImage = req.file ;
   const newProduct = new Product({
     name : req.body.name,
     description : req.body.description,
     category : req.body.category,
     price : req.body.price,
-    original_price: req.body.orig_price
+    original_price: req.body.original_price,
+    uploadImage: uploadImage
   });
 
     newProduct.save()
     .then(savedProduct => {
-      res.status(201).json(savedProduct);
+      res.status(200).json(savedProduct);
     })
     .catch(err => {
       res.status(500).json({ error: err.message });
@@ -68,20 +80,16 @@ module.exports.getSingleProduct = (req, res) => {
 module.exports.updateProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
-    const { name, description, price } = req.body;
-    let image;
-    if (req.file && req.file.buffer) {
-      image = req.file.buffer;
-    }
-
-    const updatedProduct = await Product.findByIdAndUpdate(productId, { name, description, price, image }, { new: true });
+    const { name, description, original_price, price } = req.body;
+    const uploadImage = req.file.originalname ;
+    const updatedProduct = await Product.findByIdAndUpdate(productId, { name, description, original_price, price, uploadImage }, { new: true });  
 
     return res.status(200).send({
       message: 'Product updated successfully',
       updatedProduct: updatedProduct
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating product:", error);
     res.status(500).send({ message: 'Failed to update Product' });
   }
 };
