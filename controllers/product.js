@@ -81,7 +81,7 @@ module.exports.updateProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
     const { name, description, original_price, price } = req.body;
-    const uploadImage = req.file.originalname ;
+    const uploadImage = req.file.originalname;
     const updatedProduct = await Product.findByIdAndUpdate(productId, { name, description, original_price, price, uploadImage }, { new: true });  
 
     return res.status(200).send({
