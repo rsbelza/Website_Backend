@@ -13,20 +13,14 @@ const productRoute = require("./routes/product");
 const orderRoutes = require("./routes/order");
 const userRoute = require("./routes/user");
 
-// require("./passport");
-// Server setup
+
 const app = express();
 const port = 4007;
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
-//google logIn
-// app.use(session({
-// 	secret: process.env.clientSecret,
-// 	resave: false,
-// 	saveUninitialized: false
-// }));
+
 
 app.use(passport.initialize());
 // app.use(passport.session())
