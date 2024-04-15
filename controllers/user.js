@@ -121,3 +121,28 @@ module.exports.updatePassword = async (req, res) => {
     res.status(500).send({ message: 'Internal server error' });
   }
 };
+
+
+// Update profile
+module.exports.updateProfile = async (req, res) => {
+    try {
+
+            
+        // Get the user ID from the authenticated token
+        const userId = req.user.id;
+
+        const { firstName, lastName, mobileNo } = req.body;
+
+        // Update the user's profile in the database
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { firstName, lastName, mobileNo },
+            { new: true }
+        );
+
+        res.send(updatedUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Failed to update profile' });
+    }
+}

@@ -20,4 +20,7 @@ router.get('/details', verify, userController.retrieveUser)
 // Update password
 router.patch('/update-password', verify, userController.updatePassword)
 
+// Route for updating user profile
+router.put('/update-profile', verify, userController.updateProfile);
+
 module.exports = router;

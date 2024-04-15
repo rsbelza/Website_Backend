@@ -2,22 +2,22 @@ const Product = require("../models/Product");
 const auth = require("../auth");
 
 // Add product
-module.exports.addProduct = (req, res) => {
-  const newProduct = new Product({
-    name : req.body.name,
-    description : req.body.description,
-    category : req.body.category,
-    price : req.body.price
-  });
+module.exports.addProduct = async (req, res) => {
+    try {
+        const newProduct = new Product({
+            name: req.body.name,
+            description: req.body.description,
+            category: req.body.category,
+            price: req.body.price,
+            image: req.body.image // Save the base64-encoded image data
+        });
 
-    newProduct.save()
-    .then(savedProduct => {
-      res.status(201).json(savedProduct);
-    })
-    .catch(err => {
-      res.status(500).json({ error: err.message });
-    });
-}
+        const savedProduct = await newProduct.save();
+        res.status(201).json(savedProduct);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 // Get All Products
 module.exports.getAllProducts = (req, res) => {
