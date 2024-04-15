@@ -1,41 +1,31 @@
 const Product = require("../models/Product");
 const auth = require("../auth");
-const multer = require('multer');
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {  
-    cb(null, 'uploads/');
-  },
-  filename: function(req, file, cb) {    
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-const upload = multer({ storage: storage });
 
-
+// Add product
 module.exports.addProduct = (req, res) => {
-  const uploadImage = req.file ;
   const newProduct = new Product({
     name : req.body.name,
     description : req.body.description,
     category : req.body.category,
-    price : req.body.price,
-    original_price: req.body.original_price,
-    uploadImage: uploadImage
+    price : req.body.price
   });
 
     newProduct.save()
     .then(savedProduct => {
-      res.status(200).json(savedProduct);
+      res.status(201).json(savedProduct);
     })
     .catch(err => {
       res.status(500).json({ error: err.message });
     });
 }
 
+// Get All Products
 module.exports.getAllProducts = (req, res) => {
    return Product.find({})
   .then(Products => {
+    // Updated to use proper conditional checks (result.length > 0) to handle cases where there are no courses.
     if(Products.length > 0) {
+      // Provided a more structured response format using an object with a key allCourses containing the courses.
       return res.status(200).send({ Products })
     } else {
       return res.status(200).send({ message: ' No Products found. '})
@@ -47,6 +37,7 @@ module.exports.getAllProducts = (req, res) => {
   });
 };
 
+// Get All Active Products
 module.exports.getAllActiveProducts = (req, res) => {
    return Product.find({})
   .then(Products => {
@@ -62,6 +53,7 @@ module.exports.getAllActiveProducts = (req, res) => {
   });
 };
 
+// Get single product /:productId
 module.exports.getSingleProduct = (req, res) => {
   const productId = req.params.productId;
   Product.findById(productId)
@@ -77,23 +69,31 @@ module.exports.getSingleProduct = (req, res) => {
     });  
 };
 
+// Update Product info /:productId
 module.exports.updateProduct = async (req, res) => {
   try {
+    // Get the user ID from the authenticated token
     const productId = req.params.productId;
-    const { name, description, original_price, price } = req.body;
-    const uploadImage = req.file.originalname;
-    const updatedProduct = await Product.findByIdAndUpdate(productId, { name, description, original_price, price, uploadImage }, { new: true });  
 
-    return res.status(200).send({
-      message: 'Product updated successfully',
-      updatedProduct: updatedProduct
+    // Retrieve the updated profile information from the request body
+    const { name, description, price } = req.body;
+
+    // Update the user's profile in the database
+    const updatedProduct = await Product.findByIdAndUpdate(productId,{ name, description, price },{ new: true }
+    );
+    return res.status(200).send({ 
+      message: 'Product updated successfully', 
+      updatedProduct: updatedProduct 
     });
+
+    res.json(updatedProduct);
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error(error);
     res.status(500).send({ message: 'Failed to update Product' });
   }
-};
+}
 
+// Archive Product
 module.exports.archiveProduct = (req, res) => {
     let updateActiveField = {
         isActive: false
@@ -114,6 +114,7 @@ module.exports.archiveProduct = (req, res) => {
     });
 };
 
+// Activate Product
 module.exports.activateProduct = (req, res) => {
     let updateActiveField = {
         isActive: true
@@ -135,6 +136,7 @@ module.exports.activateProduct = (req, res) => {
 
 };
 
+// Search Product By Name
 module.exports.searchProductByName = async (req, res) => {
     try {
         const { name } = req.body;
@@ -142,35 +144,42 @@ module.exports.searchProductByName = async (req, res) => {
         const pipeline = [
             {
                 $match: {
-                    name: { $regex: name, $options: 'i' }
+                    name: { $regex: name, $options: 'i' } // Case-insensitive search for product name
                 }
             }
         ];
 
+        // Execute the aggregation pipeline
         const products = await Product.aggregate(pipeline);
 
+        // Return the filtered products as a response
         res.status(200).json({ products });
     } catch (error) {
+        // Handle errors
         console.error('Error searching for products:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
 
+// Search Product By Price
 module.exports.searchProductByPrice = async (req, res) => {
   try {
     const { minPrice, maxPrice } = req.body;
     const pipeline = [
       {
         $match: {
-          price: { $gte: minPrice, $lte: maxPrice }
+          price: { $gte: minPrice, $lte: maxPrice } // Filter products within the given price range
         }
       }
     ];
 
-    const products = await Product.aggregate(pipeline);
+    // Execute the aggregation pipeline
+    const products = await Product .aggregate(pipeline);
 
+    // Return the filtered products as a response
     res.status(200).json({ products });
   } catch (error) {
+    // Handle errors
     console.error('Error searching for products:', error);
     res.status(500).json({ error: 'Internal server error' });
   }

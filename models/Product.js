@@ -2,9 +2,7 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
 
     name: {type: String, required: [true, 'Name is Required']},
-    uploadImage: { type: Buffer, image:{ data: Buffer, contentType: String} }, 
     description: {type: String, required: [true, 'Description is Required']},
-    original_price:{type:Number,required:[true,'Original Price is Required']},
     price: {type: Number, required: [true, 'Price is Required']},
     category: {type: String, required: [true, 'Category is Required']},     
     isActive: {type: Boolean, default: true},
