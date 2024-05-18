@@ -11,6 +11,7 @@ module.exports.createAccessToken = (user) => {
 	return jwt.sign(data, secret, {});
 }
 
+//test
 
 module.exports.verify = (req, res, next) => {
 	console.log(req.headers.authorization)
